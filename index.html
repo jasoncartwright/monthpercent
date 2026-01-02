@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Month Progress</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            margin: 0 0 30px 0;
+            color: #333;
+            font-size: 28px;
+        }
+        
+        progress {
+            width: 100%;
+            height: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        /* Style the progress bar */
+        progress::-webkit-progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+        }
+        
+        progress::-webkit-progress-value {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        progress::-moz-progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        
+        .percentage {
+            margin-top: 20px;
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .date-info {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #666;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .percentage {
+                font-size: 36px;
+            }
+            
+            progress {
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Month Progress</h1>
+        <progress id="monthProgress" value="0" max="100"></progress>
+        <div class="percentage" id="percentageDisplay">0%</div>
+        <div class="date-info" id="dateInfo"></div>
+    </div>
+    
+    <script>
+        function updateMonthProgress() {
+            const now = new Date();
+            
+            // Get the current month and year
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            
+            // Get the first day of the current month
+            const firstDayOfMonth = new Date(year, month, 1);
+            
+            // Get the first day of the next month
+            const firstDayOfNextMonth = new Date(year, month + 1, 1);
+            
+            // Calculate total hours in the month
+            const totalMilliseconds = firstDayOfNextMonth - firstDayOfMonth;
+            const totalHours = totalMilliseconds / (1000 * 60 * 60);
+            
+            // Calculate hours elapsed in the current month
+            const elapsedMilliseconds = now - firstDayOfMonth;
+            const elapsedHours = elapsedMilliseconds / (1000 * 60 * 60);
+            
+            // Calculate percentage
+            const percentage = (elapsedHours / totalHours) * 100;
+            
+            // Update the progress bar and percentage display
+            const progressBar = document.getElementById('monthProgress');
+            const percentageDisplay = document.getElementById('percentageDisplay');
+            const dateInfo = document.getElementById('dateInfo');
+            
+            progressBar.value = percentage;
+            percentageDisplay.textContent = percentage.toFixed(2) + '%';
+            
+            // Display current date info
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+            const currentHour = now.getHours();
+            const currentDay = now.getDate();
+            
+            dateInfo.textContent = `${monthNames[month]} ${year} - Day ${currentDay}, Hour ${currentHour}`;
+        }
+        
+        // Update immediately on load
+        updateMonthProgress();
+        
+        // Update every minute to keep it fresh
+        setInterval(updateMonthProgress, 60000);
+    </script>
+</body>
+</html>
